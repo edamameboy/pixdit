@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f3ef" />
+    <meta
+      name="description"
+      content="Layera membantu bisnis lokal membuat materi promosi yang siap dipakai dengan bantuan AI."
+    />
+    <title>Layera — Studio kreatif untuk bisnismu</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <button id="language-switch" class="language-switch" type="button" aria-label="Switch to English">EN</button>
+
+    <main id="auth-screen" class="auth-screen">
+      <section class="auth-visual">
+        <a class="brand brand-light" href="#" aria-label="Layera">
+          <span class="brand-mark"><i></i><i></i></span>
+          <span>Layera</span>
+        </a>
+
+        <div class="auth-copy">
+          <span class="eyebrow eyebrow-light"><b></b> Studio kreatif bertenaga AI</span>
+          <h1>Ide bagus dapat<br />terlihat <em>luar biasa.</em></h1>
+          <p>
+            Bawa satu ceritamu dan jelajahi beragam arah visual yang siap
+            membantu bisnismu berkembang.
+          </p>
+        </div>
+
+        <div class="auth-art" aria-hidden="true">
+          <div class="float-tag tag-one">10 agent <span>✦</span></div>
+          <div class="auth-poster poster-photo">
+            <div class="mini-kicker">RUMAH SEDUH</div>
+            <div class="mini-title">Rasa pulang,<br />di setiap tegukan.</div>
+            <div class="mini-pill">COBA SEKARANG →</div>
+          </div>
+          <div class="auth-poster poster-type">
+            <small>AKHIR PEKAN</small>
+            <strong>DUA<br />PULUH<br />PERSEN</strong>
+            <span>untuk semua varian favoritmu</span>
+          </div>
+          <div class="float-tag tag-two"><span class="avatar-dots">AI</span> Dibuat hanya dalam ±2 menit</div>
+        </div>
+
+        <p class="auth-footnote">Dibuat untuk bisnis lokal Indonesia.</p>
+      </section>
+
+      <section class="auth-panel">
+        <div class="auth-form-wrap">
+          <div class="mobile-brand brand">
+            <span class="brand-mark"><i></i><i></i></span>
+            <span>Layera</span>
+          </div>
+          <div id="login-heading" class="form-heading">
+            <span class="mini-label">SELAMAT DATANG</span>
+            <h2>Masuk ke ruang kreatifmu.</h2>
+            <p>Belum punya akun? <button id="show-register" class="text-button" type="button">Daftar gratis</button></p>
+          </div>
+
+          <form id="login-form" autocomplete="on">
+            <label for="email">Email</label>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6" /></svg>
+              <input id="email" type="email" placeholder="nama@bisnismu.com" autocomplete="email" required />
+            </div>
+
+            <div class="label-row">
+              <label for="password">Kata Sandi</label>
+              <button type="button" class="text-button subtle">Lupa kata sandi?</button>
+            </div>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3M5 10h14v10H5z" /></svg>
+              <input id="password" type="password" placeholder="Masukkan kata sandi" autocomplete="current-password" required />
+              <button id="toggle-password" type="button" class="icon-button eye-button" aria-label="Tampilkan kata sandi">
+                <svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg>
+              </button>
+            </div>
+
+            <label class="check-row">
+              <input id="login-remember" type="checkbox" checked />
+              <span class="custom-check">✓</span>
+              Ingat saya
+            </label>
+
+            <button class="primary-button auth-submit" type="submit">
+              Masuk ke Layera <span>→</span>
+            </button>
+          </form>
+
+          <div id="register-heading" class="form-heading is-hidden">
+            <span class="mini-label">AKUN BARU</span>
+            <h2>Mulai ruang kreatifmu.</h2>
+            <p>Sudah punya akun? <button id="show-login" class="text-button" type="button">Masuk di sini</button></p>
+          </div>
+
+          <form id="register-form" class="is-hidden" autocomplete="on">
+            <label for="register-name">Nama lengkap</label>
+            <div class="input-wrap"><input id="register-name" type="text" minlength="2" maxlength="80" placeholder="Nama yang akan ditampilkan" autocomplete="name" required /></div>
+            <label for="register-email">Alamat email</label>
+            <div class="input-wrap"><input id="register-email" type="email" placeholder="nama@bisnismu.com" autocomplete="email" required /></div>
+            <label for="register-password">Kata sandi</label>
+            <div class="input-wrap"><input id="register-password" type="password" minlength="8" maxlength="128" placeholder="Minimal 8 karakter" autocomplete="new-password" required /></div>
+            <label for="register-confirm">Ulangi kata sandi</label>
+            <div class="input-wrap"><input id="register-confirm" type="password" minlength="8" maxlength="128" placeholder="Ketik ulang kata sandi" autocomplete="new-password" required /></div>
+            <div class="captcha-label-row"><label for="register-captcha">Verifikasi keamanan</label><button id="refresh-captcha" class="text-button subtle" type="button">Soal baru</button></div>
+            <div id="math-captcha" class="captcha-control"><strong id="captcha-question">Memuat soal...</strong><input id="register-captcha" type="number" inputmode="numeric" autocomplete="off" aria-label="Jawaban verifikasi keamanan" required /></div>
+            <div id="turnstile-widget" class="turnstile-widget is-hidden" aria-label="Verifikasi keamanan Cloudflare Turnstile"></div>
+            <p class="signup-safety-note">CAPTCHA, pembatasan jaringan, dan deteksi perangkat membantu menjaga kredit gratis tetap adil.</p>
+            <label class="check-row"><input id="register-remember" type="checkbox" checked /><span class="custom-check">✓</span> Ingat saya</label>
+            <button class="primary-button auth-submit" type="submit">Buat akun <span>→</span></button>
+          </form>
+
+          <p id="auth-error" class="auth-error is-hidden" role="alert"></p>
+          <p class="terms">Dengan melanjutkan, kamu menyetujui <a href="#">Ketentuan</a> dan <a href="#">Privasi</a> kami.</p>
+        </div>
+      </section>
+    </main>
+
+    <div id="app-shell" class="app-shell is-hidden">
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <a class="brand" href="#dashboard" data-route="dashboard">
+            <span class="brand-mark"><i></i><i></i></span><span>Layera</span>
+          </a>
+          <button id="new-project-side" class="side-create" type="button"><span>＋</span> Proyek Baru</button>
+        </div>
+
+        <nav class="side-nav" aria-label="Navigasi utama">
+          <button class="nav-item active" data-route="dashboard" type="button">
+            <svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+            Proyek Saya
+          </button>
+          <button id="library-nav" class="nav-item" data-route="library" type="button">
+            <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg>
+            Library
+            <span id="library-nav-count" class="nav-count">0</span>
+          </button>
+          <button class="nav-item" data-route="inspiration" type="button">
+            <svg viewBox="0 0 24 24"><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7zM18.5 16l.7 2.3 2.3.7-2.3.7-.7 2.3-.7-2.3-2.3-.7 2.3-.7z"/></svg>
+            Inspirasi
+          </button>
+          <button class="nav-item" data-route="templates" type="button">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 9h16M9 9v11"/></svg>
+            Template
+            <span class="soon-badge">Segera</span>
+          </button>
+        </nav>
+
+        <div class="side-spacer"></div>
+        <div class="plan-card" id="plan-card">
+          <div class="plan-icon">✦</div>
+          <strong id="sidebar-plan-name">Paket Gratis</strong>
+          <span id="sidebar-plan-usage">Memuat kuota...</span>
+          <div class="plan-progress"><i></i></div>
+          <button id="upgrade-plan-button" type="button">Lihat paket</button>
+        </div>
+        <div class="sidebar-bottom">
+          <button id="help-button" class="nav-item" type="button" aria-haspopup="dialog" aria-controls="help-modal" aria-expanded="false">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.5 2.5 0 0 1 4.7 1.2c0 1.8-2.4 2-2.4 3.7M12 17h.01"/></svg>
+            Bantuan
+          </button>
+          <div id="account-popover" class="account-popover is-hidden" role="menu" aria-label="Menu akun">
+            <div class="account-popover-head">
+              <span id="account-menu-avatar" class="avatar">MF</span>
+              <span><strong id="account-menu-name">Pengguna Layera</strong><small id="account-menu-plan">Paket Gratis</small></span>
+            </div>
+            <div class="account-popover-actions">
+              <button type="button" data-account-open="profile" role="menuitem">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg>
+                Settings
+              </button>
+              <button type="button" data-account-open="security" role="menuitem">
+                <svg viewBox="0 0 24 24"><path d="M6 10V8a6 6 0 0 1 12 0v2M5 10h14v11H5z"/></svg>
+                Keamanan
+              </button>
+            </div>
+            <div class="account-current-row">
+              <span id="account-menu-mini-avatar" class="account-mini-avatar">MF</span>
+              <strong id="account-menu-current-name">Pengguna Layera</strong>
+              <div class="account-popover-email"><span id="account-menu-email">email akun</span><b aria-hidden="true"></b></div>
+              <i aria-hidden="true">✓</i>
+            </div>
+            <div class="account-menu-divider"></div>
+            <button class="account-menu-item" type="button" data-account-open="preferences" role="menuitem">
+              <svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M7 14v6"/></svg>
+              <span><strong>Preferensi Proyek</strong><small>Format, Gaya, dan Halaman Awal</small></span>
+              <b aria-hidden="true">›</b>
+            </button>
+            <button id="account-menu-logout" class="account-menu-item account-menu-logout" type="button" role="menuitem">
+              <svg viewBox="0 0 24 24"><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10"/></svg>
+              <span><strong>Log out</strong><small>Keluar Dari Akun</small></span>
+            </button>
+          </div>
+          <button id="profile-button" class="profile-button" type="button" aria-label="Buka menu akun" aria-controls="account-popover" aria-expanded="false">
+            <span id="user-avatar" class="avatar">MF</span>
+            <span><strong id="user-name">Pengguna Layera</strong><small id="user-email">email akun</small></span>
+            <b>•••</b>
+          </button>
+        </div>
+      </aside>
+
+      <div class="app-main">
+        <header class="mobile-header">
+          <button id="mobile-menu" class="icon-button" type="button" aria-label="Buka menu">
+            <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </button>
+          <a class="brand" href="#dashboard" data-route="dashboard"><span class="brand-mark"><i></i><i></i></span><span>Layera</span></a>
+          <button id="mobile-profile-button" class="mini-avatar" type="button" aria-label="Buka menu akun" aria-controls="account-popover" aria-expanded="false"><span id="mobile-avatar">MF</span></button>
+        </header>
+
+        <section id="dashboard-view" class="view dashboard-view">
+          <div class="dashboard-header">
+            <div>
+              <h1 id="welcome-title">Selamat Datang, Kreator.</h1>
+              <p>Apa yang ingin kamu ceritakan hari ini?</p>
+            </div>
+          </div>
+
+          <section class="quick-start">
+            <div class="quick-copy">
+              <span class="mini-label">MULAI BERKREASI</span>
+              <h2>Satu ide.<br />Banyak kemungkinan.</h2>
+              <p>Ceritakan bisnismu, biarkan tim kreatif AI kami menerjemahkannya menjadi visual.</p>
+              <button id="quick-create" class="cream-button" type="button">Mulai Proyek <span>↗</span></button>
+            </div>
+            <div class="quick-visual" aria-hidden="true">
+              <div class="idea-card card-a"><span>01</span><strong>Berani</strong><small>Editorial</small></div>
+              <div class="idea-card card-b"><span>02</span><strong>Hangat</strong><small>Organik</small></div>
+              <div class="idea-card card-c"><span>03</span><strong>Segar</strong><small>Playful</small></div>
+              <div class="spark spark-a">✦</div><div class="spark spark-b">✦</div>
+            </div>
+          </section>
+
+          <div class="section-heading">
+            <div><h2>Proyek Terbarumu</h2><span id="project-count">3 proyek</span></div>
+            <button id="view-all" class="text-button" type="button" aria-haspopup="dialog" aria-controls="all-projects-modal" aria-expanded="false">Lihat Semua <span>→</span></button>
+          </div>
+
+          <div id="project-grid" class="project-grid"></div>
+
+          <div class="tips-strip">
+            <span class="tip-icon">↗</span>
+            <p><strong>Tip</strong> Berikan prompt yang spesifik agar memberikan hasil yang lebih tajam, menuju kepada target audiens yang di inginkan.</p>
+            <button id="dismiss-tip" class="icon-button" type="button" aria-label="Tutup tip">×</button>
+          </div>
+        </section>
+
+        <section id="inspiration-view" class="view inspiration-view is-hidden">
+          <header class="inspiration-header">
+            <div>
+              <span class="eyebrow"><b></b> IDE UNTUK MEMULAI</span>
+              <h1>Inspirasi pilihan Layera.</h1>
+              <p>Tiga contoh ini tersedia untuk setiap akun. Gunakan sebagai titik awal, lalu sesuaikan dengan bisnismu sendiri.</p>
+            </div>
+            <button id="inspiration-create" class="primary-button" type="button">Buat dari nol <span>→</span></button>
+          </header>
+          <div id="inspiration-grid" class="inspiration-grid"></div>
+        </section>
+
+        <section id="library-view" class="view library-view is-hidden">
+          <header class="library-header">
+            <div>
+              <span class="eyebrow"><b></b> KOLEKSI PRIBADI</span>
+              <h1>Library desainmu.</h1>
+              <p>Simpan hasil terbaik, lalu buat versi baru tanpa mengubah gambar generasi awal.</p>
+            </div>
+            <div class="library-lock-note"><span>◆</span><div><strong>Original Selalu Aman</strong><small>Editing akan membuat versi baru di Library.</small></div></div>
+          </header>
+
+          <div class="library-heading">
+            <div><h2>Desain Tersimpan</h2><span id="library-count">0 Desain</span></div>
+            <button id="library-to-projects" class="secondary-button" type="button">Kembali ke proyek</button>
+          </div>
+
+          <div id="library-empty" class="library-empty">
+            <div class="library-empty-icon">◇</div>
+            <h3>Librarymu Masih Kosong.</h3>
+            <p>Pilih salah satu hasil generasi dari proyek, lalu klik <strong>Simpan ke Library</strong>.</p>
+            <button id="library-empty-projects" class="primary-button" type="button">Lihat Proyek <span>→</span></button>
+          </div>
+
+          <div id="library-grid" class="library-grid"></div>
+        </section>
+
+        <section id="workspace-view" class="view workspace-view is-hidden">
+          <header class="workspace-header">
+            <div class="workspace-title">
+              <button id="back-dashboard" class="icon-button back-button" type="button" aria-label="Kembali">←</button>
+              <div><span>Proyek / <b id="workspace-category">Promosi Produk</b></span><h1 id="workspace-name">Kampanye Kopi Gula Aren</h1></div>
+            </div>
+            <div class="workspace-actions">
+              <span id="save-status" class="save-status"><i></i> Tersimpan</span>
+              <button id="export-button" class="dark-button" type="button">Ekspor <span>↓</span></button>
+            </div>
+          </header>
+
+          <div class="workspace-body">
+            <aside class="prompt-panel">
+              <div class="prompt-panel-head">
+                <span class="step-count">01</span>
+                <div><h2>Ceritakan Idemu</h2><p>Semakin spesifik, hasilnya semakin tepat.</p></div>
+              </div>
+
+              <label for="prompt-input">Apa yang ingin kamu buat?</label>
+              <div class="prompt-box">
+                <textarea id="prompt-input" maxlength="1000" placeholder="Ceritakan produk atau layanan, audiens, suasana, dan tujuan promosimu..."></textarea>
+                <div class="prompt-meta"><button id="magic-prompt" type="button">✦ Sempurnakan Prompt</button><span><b id="char-count">0</b>/1000</span></div>
+              </div>
+
+              <div id="prompt-suggestions" class="prompt-suggestions">
+                <span>Coba Tambahkan:</span>
+                <div id="prompt-suggestion-buttons"></div>
+              </div>
+
+              <div class="copy-section">
+                <div class="copy-section-head"><span>Teks Poster</span><small>Ditambahkan setelah gambar dibuat</small></div>
+                <label for="brand-input">Nama Brand:</label>
+                <input id="brand-input" type="text" maxlength="60" value="Rumah Seduh" placeholder="Contoh: Rumah Seduh" />
+                <label for="headline-input">Headline:</label>
+                <textarea id="headline-input" maxlength="100" rows="2" placeholder="Contoh: Rasa pulang di setiap tegukan">Rasa pulang di setiap tegukan.</textarea>
+                <label for="cta-input">Call to Action:</label>
+                <input id="cta-input" type="text" maxlength="50" value="Nikmati sekarang" placeholder="Contoh: Pesan sekarang" />
+                <label for="brand-logo-input">Logo Brand <span class="optional-label">Opsional</span></label>
+                <div class="logo-upload-row">
+                  <input id="brand-logo-input" class="visually-hidden" type="file" accept="image/png,image/jpeg,.jpg,.jpeg" />
+                  <label class="logo-upload-button" for="brand-logo-input"><span>↑</span><strong>Upload logo</strong><small>PNG, JPG, atau JPEG</small></label>
+                  <div id="brand-logo-preview" class="brand-logo-preview is-hidden"><img alt="Preview logo brand" /><button id="remove-brand-logo" type="button" aria-label="Hapus logo">×</button></div>
+                </div>
+                <p>AI membuat key visual tanpa tulisan. Kosongkan kolom yang tidak ingin ditampilkan. Setelah upload, posisi logo dapat kamu atur langsung dengan drag pada hasil gambar.</p>
+              </div>
+
+              <div class="agent-section">
+                <div class="control-title"><span>Tim Agent Kreatif</span><small id="agent-plan-note">Paket gratis: pilih 1 agent</small></div>
+                <p>Pilih arah kreatif yang ingin digunakan. Klik agent lain untuk mengganti pilihanmu.</p>
+                <div id="agent-selector" class="agent-selector" role="group" aria-label="Pilih agent kreatif"></div>
+              </div>
+
+              <div class="control-section">
+                <div class="control-title"><span><svg viewBox="0 0 24 24"><path d="M4 7h16M7 7V4M17 7v3M4 17h16M9 17v3M15 17v-3"/></svg> Arah Visual</span><button id="reset-controls" type="button">Atur Ulang</button></div>
+                <div id="style-options" class="style-options">
+                  <button class="style-option selected" data-style="Eksploratif" type="button"><i class="swatch swatch-one"></i><span><strong>Eksploratif</strong><small>10 Gaya Yang Beragam</small></span><b>✓</b></button>
+                  <button class="style-option" data-style="Minimal" type="button"><i class="swatch swatch-two"></i><span><strong>Minimal</strong><small>Bersih dan Elegan</small></span><b>✓</b></button>
+                  <button class="style-option" data-style="Berani" type="button"><i class="swatch swatch-three"></i><span><strong>Berani</strong><small>Kontras dan Ekspresif</small></span><b>✓</b></button>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div><label for="format-select">Format</label><select id="format-select"><option>Instagram Post · 4:5</option><option>Instagram Story · 9:16</option><option>Persegi · 1:1</option></select></div>
+                <div><label for="color-control">Warna Utama</label><div class="color-control"><input id="color-control" type="color" value="#5a3529" /><span id="color-value">#5A3529</span></div></div>
+              </div>
+
+              <div class="quality-control">
+                <label for="quality-select">Kualitas gambar</label>
+                <select id="quality-select"><option value="1mp">1MP / HD · 2 kredit</option><option value="2mp">2MP · 4 kredit</option><option value="4mp">4MP · 8 kredit</option></select>
+                <small id="quality-plan-note">Paket Gratis mendukung hingga 1MP / HD.</small>
+              </div>
+
+              <button id="generate-button" class="generate-button" type="button"><span class="generate-icon">✦</span><span><strong id="generate-button-label">Buat 1 gambar</strong><small id="generation-cost-note">1MP · 2 kredit</small></span><b>→</b></button>
+              <p id="api-status" class="private-note api-status"><span>●</span> Memeriksa koneksi AI...</p>
+            </aside>
+
+            <main class="results-panel">
+              <div class="results-head">
+                <div><span class="step-count">02</span><div><h2>Pilih yang paling kamu suka</h2><p id="results-subtitle">Pilih agent lalu buat key visual dari brief-mu.</p></div></div>
+                <div class="view-toggles"><button class="active" type="button" data-cols="3" aria-label="Tampilan grid">▦</button><button type="button" data-cols="2" aria-label="Tampilan besar">▥</button></div>
+              </div>
+
+              <div id="empty-results" class="empty-results is-hidden">
+                <div class="empty-orbit"><span>✦</span><i></i><i></i></div>
+                <h3>Ide hebatmu dimulai di sini.</h3>
+                <p>Tulis brief di sebelah kiri, pilih agent kreatif, lalu buat key visual pertamamu.</p>
+              </div>
+
+              <div id="generation-progress" class="generation-progress is-hidden">
+                <div class="progress-copy"><span class="ai-loader">✦</span><div><strong id="progress-title">AI sedang membuat key visual...</strong><small id="progress-label">Membaca cerita brand-mu</small></div><b id="progress-percent">18%</b></div>
+                <div class="progress-track"><i id="progress-bar"></i></div>
+              </div>
+
+              <div id="results-grid" class="results-grid"></div>
+            </main>
+          </div>
+
+          <div id="selection-bar" class="selection-bar is-hidden">
+            <div class="selected-thumb poster poster-1"><div class="poster-copy"></div></div>
+            <div class="selection-copy"><span>PILIHANMU</span><strong id="selected-name">Konsep 01 · Editorial Warm</strong></div>
+            <button id="save-library-button" class="secondary-button" type="button">◇ Simpan ke Library</button>
+            <button id="use-design-button" class="dark-button" type="button">Gunakan desain <span>→</span></button>
+            <button id="clear-selection" class="icon-button" type="button" aria-label="Batalkan pilihan">×</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="project-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal">
+        <button class="icon-button modal-close" type="button" data-close-modal>×</button>
+        <span class="modal-kicker">PROYEK BARU</span>
+        <h2 id="modal-title">Apa yang akan kita buat?</h2>
+        <p>Beri nama proyekmu. Detailnya bisa kamu kembangkan di ruang kreatif.</p>
+        <form id="project-form">
+          <label for="project-name">Nama proyek</label>
+          <input id="project-name" type="text" placeholder="Contoh: Promo Menu Lebaran" required />
+          <label for="project-category">Kategori bisnis</label>
+          <div class="category-grid">
+            <button class="category-option selected" type="button" data-category="Makanan & Minuman"><span>☕</span>Makanan & Minuman</button>
+            <button class="category-option" type="button" data-category="Fashion"><span>◒</span>Fashion</button>
+            <button class="category-option" type="button" data-category="Kecantikan"><span>✿</span>Kecantikan</button>
+            <button class="category-option" type="button" data-category="Lainnya"><span>＋</span>Lainnya</button>
+          </div>
+          <div class="modal-actions"><button class="secondary-button" data-close-modal type="button">Batal</button><button class="primary-button" type="submit">Buat proyek <span>→</span></button></div>
+        </form>
+      </div>
+    </div>
+
+    <div id="all-projects-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="all-projects-title" aria-hidden="true">
+      <div class="modal all-projects-modal">
+        <button id="all-projects-close" class="icon-button modal-close" type="button" aria-label="Tutup semua proyek">×</button>
+        <header class="all-projects-head">
+          <span class="modal-kicker">PROYEK SAYA</span>
+          <h2 id="all-projects-title">Semua proyekmu.</h2>
+          <p><span id="all-projects-count">0 proyek</span> tersimpan di ruang kerjamu.</p>
+        </header>
+        <div class="all-projects-content">
+          <div id="all-projects-grid" class="all-projects-grid"></div>
+          <div id="all-projects-empty" class="all-projects-empty is-hidden">
+            <span aria-hidden="true">✦</span>
+            <h3>Belum ada proyek.</h3>
+            <p>Mulai proyek pertamamu dan kembangkan ide promosi di satu tempat.</p>
+            <button id="all-projects-create" class="primary-button" type="button">＋ Buat proyek</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="help-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="help-modal-title" aria-describedby="help-modal-description" aria-hidden="true">
+      <div class="modal help-modal">
+        <button id="help-modal-close" class="icon-button modal-close" type="button" aria-label="Tutup bantuan">×</button>
+        <span class="modal-kicker">BANTUAN LAYERA</span>
+        <h2 id="help-modal-title">Kami siap membantu.</h2>
+        <p id="help-modal-description">Hubungi tim kami melalui telepon atau email untuk pertanyaan seputar akun dan penggunaan Layera.</p>
+        <div class="help-contacts">
+          <a class="help-contact-card" href="tel:+6281234567890">
+            <span class="help-contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3H4.5A1.5 1.5 0 0 0 3 4.5C3 13.6 10.4 21 19.5 21a1.5 1.5 0 0 0 1.5-1.5V17l-4-1-1.1 2.2a14.3 14.3 0 0 1-10.1-10L8 7Z"/></svg></span>
+            <span><small>Nomor telepon</small><strong>+62 812 3456 7890</strong></span>
+            <b aria-hidden="true">↗</b>
+          </a>
+          <a class="help-contact-card" href="mailto:support@layera.id">
+            <span class="help-contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg></span>
+            <span><small>Email perusahaan</small><strong>support@layera.id</strong></span>
+            <b aria-hidden="true">↗</b>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div id="delete-project-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="delete-project-title" aria-hidden="true">
+      <div class="modal delete-project-modal">
+        <button id="delete-project-close" class="icon-button modal-close" type="button" aria-label="Tutup konfirmasi">×</button>
+        <span class="modal-kicker">HAPUS PROYEK</span>
+        <h2 id="delete-project-title">Hapus proyek ini?</h2>
+        <p><strong id="delete-project-name"></strong> akan dihapus dari Proyek Saya. Desain yang sudah masuk Library tetap aman.</p>
+        <div class="modal-actions"><button id="cancel-delete-project" class="secondary-button" type="button">Batal</button><button id="confirm-delete-project" class="danger-button" type="button">Hapus proyek</button></div>
+      </div>
+    </div>
+
+    <div id="account-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
+      <div class="modal account-modal">
+        <button id="account-modal-close" class="icon-button modal-close" type="button" aria-label="Tutup pengaturan">×</button>
+        <span class="modal-kicker">AKUN LAYERA</span>
+        <h2 id="account-modal-title">Pengaturan Akun.</h2>
+        <p>Kelola Profil, Preferensi Proyek Baru, dan Keamanan Akunmu.</p>
+
+        <div class="account-tabs" role="tablist" aria-label="Bagian pengaturan akun">
+          <button class="account-tab active" type="button" data-account-tab="profile">Profil</button>
+          <button class="account-tab" type="button" data-account-tab="preferences">Preferensi</button>
+          <button class="account-tab" type="button" data-account-tab="security">Keamanan</button>
+        </div>
+
+        <section class="account-panel" data-account-panel="profile">
+          <form id="profile-form">
+            <label for="account-name">Nama:</label>
+            <input id="account-name" type="text" minlength="2" maxlength="80" autocomplete="name" required />
+            <label for="account-email">Alamat Email:</label>
+            <input id="account-email" type="email" readonly />
+            <p class="field-note">Email menjadi identitas login dan belum dapat diubah pada versi lokal ini.</p>
+            <div class="modal-actions"><button class="primary-button" type="submit">Simpan Profil</button></div>
+          </form>
+        </section>
+
+        <section class="account-panel is-hidden" data-account-panel="preferences">
+          <form id="preferences-form">
+            <div class="account-field-grid">
+              <div><label for="preference-format">Format Proyek Baru</label><select id="preference-format"><option>Instagram Post · 4:5</option><option>Instagram Story · 9:16</option><option>Persegi · 1:1</option></select></div>
+              <div><label for="preference-style">Gaya Awal</label><select id="preference-style"><option>Eksploratif</option><option>Minimal</option><option>Berani</option></select></div>
+              <div><label for="preference-color">Warna Utama</label><input id="preference-color" type="color" value="#5a3529" /></div>
+              <div><label for="preference-start-view">Halaman Setelah Login</label><select id="preference-start-view"><option value="dashboard">Proyek Saya</option><option value="library">Library</option></select></div>
+            </div>
+            <div class="modal-actions"><button class="primary-button" type="submit">Simpan Preferensi</button></div>
+          </form>
+        </section>
+
+        <section class="account-panel is-hidden" data-account-panel="security">
+          <form id="password-form">
+            <label for="current-password">Sandi Saat Ini</label>
+            <input id="current-password" type="password" autocomplete="current-password" required />
+            <label for="new-password">Sandi Baru</label>
+            <input id="new-password" type="password" minlength="8" maxlength="128" autocomplete="new-password" required />
+            <label for="confirm-new-password">Ulangi Kata Sandi</label>
+            <input id="confirm-new-password" type="password" minlength="8" maxlength="128" autocomplete="new-password" required />
+            <div class="modal-actions"><button class="primary-button" type="submit">Perbarui Kata Sandi</button></div>
+          </form>
+        </section>
+
+      </div>
+    </div>
+
+    <div id="upgrade-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="upgrade-modal-title" aria-hidden="true">
+      <div class="modal upgrade-modal">
+        <button id="upgrade-modal-close" class="icon-button modal-close" type="button" aria-label="Tutup informasi paket">×</button>
+        <span class="modal-kicker">PAKET LAYERA</span>
+        <h2 id="upgrade-modal-title">Token kreatifmu sudah habis.</h2>
+        <p id="upgrade-modal-message" class="upgrade-message">Kamu sudah menggunakan semua token kreatif yang ada.
+
+Token gratis selanjutnya akan hadir pada tanggal reset akunmu.
+
+Ayo upgrade ke pro agar dapat membuka potensial terbaik dari program ini, dapat membuat ~100 gambar, bebas memilih behavior agentic, dll.</p>
+        <div class="upgrade-comparison">
+          <div><small>PAKET GRATIS</small><strong>11 kredit / minggu</strong><span>1 gambar 1MP / HD</span><span>Hingga 3 edit</span><span>Untuk 1 brand</span></div>
+          <div class="featured"><small>LAYERA PRO</small><strong>200 kredit / bulan</strong><span>Hingga ~100 gambar 1MP</span><span>Kualitas 1MP, 2MP, dan 4MP</span><span>10 agent dan brand tanpa batas</span></div>
+        </div>
+        <p class="field-note">Sistem paket sudah siap. Integrasi pembayaran belum diaktifkan pada versi lokal ini.</p>
+        <div class="modal-actions"><button id="upgrade-contact-button" class="primary-button" type="button">Upgrade ke pro - Rp. 199.999/bln</button></div>
+      </div>
+    </div>
+
+    <aside id="refine-drawer" class="refine-drawer" aria-hidden="true">
+      <div class="drawer-head"><div><span class="modal-kicker">EDIT DI LIBRARY</span><h2>Buat versi baru.</h2><p id="drawer-version-meta">Versi awal akan tetap tersimpan.</p></div><button id="close-drawer" class="icon-button" type="button">×</button></div>
+      <div class="drawer-preview"><div id="drawer-poster" class="poster poster-1"><div class="poster-copy"><small>BRAND LOKAL</small><strong>Headline Promosimu.</strong><span>Pelajari Sekarang</span></div></div></div>
+      <label for="refine-input">Apa yang ingin kamu ubah?</label>
+      <textarea id="refine-input" maxlength="500" placeholder="Contoh: Buat latar lebih terang dan ukuran produk sedikit lebih besar..."></textarea>
+      <div class="refine-chips"><button type="button">Lebih Minimal</button><button type="button">Warna Lebih Hangat</button><button type="button">Perbesar Produk</button></div>
+      <button id="regenerate-button" class="generate-button" type="button"><span class="generate-icon">✦</span><span><strong>Buat variasi baru</strong><small>Disimpan sebagai versi baru · original tidak berubah</small></span><b>→</b></button>
+    </aside>
+    <div id="drawer-scrim" class="drawer-scrim is-hidden"></div>
+
+    <div id="toast" class="toast" role="status"><span>✓</span><p><strong>Berhasil</strong><small>Perubahanmu Sudah Tersimpan.</small></p></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

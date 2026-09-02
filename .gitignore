@@ -1,0 +1,11 @@
+# Generated campaign images are runtime output.
+generated/
+data/
+
+# Local visual test artifacts.
+preview-*.png
+
+# Never commit local secrets.
+.env
+.env.*
+!.env.example
