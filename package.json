@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "api/index.js",
   "description": "Layera image campaign generator with a Node.js backend and Replicate FLUX 2 Pro.",
   "engines": {
     "node": ">=20.9.0"
