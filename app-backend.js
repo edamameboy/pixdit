@@ -653,10 +653,12 @@ async function handleAuthAndAccount(request, response, pathname) {
     } catch {
       return sendJson(response, 401, { error: "invalid_credentials", message: "Email atau kata sandi tidak cocok." });
     }
-    let user = store.data.users[authUser.id] || findUserByEmail(email);
-    if (user && user.id !== authUser.id) {
-      const previousId = user.id;
-      await store.mutate((data) => {
+    let user;
+    let sessionObj;
+    await store.mutate((data) => {
+      user = data.users[authUser.id] || Object.values(data.users).find((u) => u.email === email);
+      if (user && user.id !== authUser.id) {
+        const previousId = user.id;
         delete data.users[previousId];
         user.id = authUser.id;
         data.users[authUser.id] = user;
@@ -668,18 +670,34 @@ async function handleAuthAndAccount(request, response, pathname) {
           data.accountBrands[authUser.id] = data.accountBrands[previousId];
           delete data.accountBrands[previousId];
         }
-      });
-    }
-    if (!user) {
-      user = createUserProfile({
-        id: authUser.id,
-        email,
-        displayName: authUser.user_metadata?.display_name || email.split("@")[0],
-      });
-      await store.mutate((data) => { data.users[user.id] = user; });
-    }
-    const session = await createSession(user.id, Boolean(input.remember));
-    return sendJson(response, 200, { ok: true, authenticated: true, csrfToken: session.csrfToken, user: getPublicUser(user), preferences: user.preferences || defaultPreferences() }, { "Set-Cookie": getSessionCookie(session) });
+      }
+      if (!user) {
+        user = createUserProfile({
+          id: authUser.id,
+          email,
+          displayName: authUser.user_metadata?.display_name || email.split("@")[0],
+        });
+        data.users[user.id] = user;
+      }
+      
+      const token = randomBytes(32).toString("base64");
+      const tokenHash = sha256(token);
+      const csrfToken = randomBytes(32).toString("base64");
+      sessionObj = {
+        userId: user.id,
+        csrfToken,
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + (Boolean(input.remember) ? 30 : 1) * 24 * 60 * 60 * 1000).toISOString(),
+        token
+      };
+      data.sessions[tokenHash] = {
+        userId: sessionObj.userId,
+        csrfToken: sessionObj.csrfToken,
+        createdAt: sessionObj.createdAt,
+        expiresAt: sessionObj.expiresAt
+      };
+    });
+    return sendJson(response, 200, { ok: true, authenticated: true, csrfToken: sessionObj.csrfToken, user: getPublicUser(user), preferences: user.preferences || defaultPreferences() }, { "Set-Cookie": getSessionCookie(sessionObj) });
   }
 
   const auth = await getAuthenticatedUser(request);
