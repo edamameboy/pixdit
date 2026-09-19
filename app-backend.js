@@ -33,7 +33,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const port = Math.min(65_535, Math.max(1, Number.parseInt(process.env.PORT || "8000", 10) || 8000));
 const host = process.env.HOST || "0.0.0.0";
 const publicOrigin = String(process.env.PUBLIC_ORIGIN || "").replace(/\/+$/, "");
-const trustProxy = /^(?:1|true|yes)$/i.test(process.env.TRUST_PROXY || "");
+const trustProxy = Boolean(process.env.VERCEL) || /^(?:1|true|yes)$/i.test(process.env.TRUST_PROXY || "");
 const cookieSecure = publicOrigin.startsWith("https://") || /^(?:1|true|yes)$/i.test(process.env.COOKIE_SECURE || "");
 const sessionCookieName = cookieSecure ? "__Host-layera_session" : "layera_session";
 const generatedRoot = path.resolve(projectRoot, process.env.GENERATED_DIR || (process.env.VERCEL ? "/tmp/layera-generated" : "generated"));
