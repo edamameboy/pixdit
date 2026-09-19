@@ -43,9 +43,14 @@ const supabasePublishableKey = String(process.env.SUPABASE_PUBLISHABLE_KEY || ""
 const supabaseSecretKey = String(process.env.SUPABASE_SECRET_KEY || "");
 const useMemoryBackend = process.env.NODE_ENV === "test";
 if (!useMemoryBackend && (!supabaseUrl || !supabasePublishableKey || !supabaseSecretKey)) {
-  throw new Error("SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, dan SUPABASE_SECRET_KEY wajib diatur.");
+  console.warn("PERINGATAN: SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, dan SUPABASE_SECRET_KEY belum diatur. API akan gagal diakses.");
 }
-const store = useMemoryBackend ? new MemoryStore() : await SupabaseStore.connect({ url: supabaseUrl, secretKey: supabaseSecretKey });
+let store;
+try {
+  store = useMemoryBackend ? new MemoryStore() : await SupabaseStore.connect({ url: supabaseUrl, secretKey: supabaseSecretKey });
+} catch (err) {
+  console.warn("Gagal terhubung ke Supabase saat inisialisasi:", err.message);
+}
 const accountAuth = useMemoryBackend
   ? new MemoryAuth()
   : new SupabaseAuth({ url: supabaseUrl, publishableKey: supabasePublishableKey, secretKey: supabaseSecretKey });
