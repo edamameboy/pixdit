@@ -257,11 +257,13 @@ async function allowSecurityEvent(key, eventType, limit, windowMinutes) {
   const cutoff = Date.now() - windowMinutes * 60 * 1000;
   const count = store.data.securityEvents.filter((event) => event.key === key && event.eventType === eventType && Date.parse(event.createdAt) >= cutoff).length;
   if (count >= limit) return false;
-  await store.mutate((data) => {
+  
+  store.mutate((data) => {
     data.securityEvents.push({ id: randomUUID(), key, eventType, createdAt: new Date().toISOString() });
     const oldest = Date.now() - 7 * 24 * 60 * 60 * 1000;
     data.securityEvents = data.securityEvents.filter((event) => Date.parse(event.createdAt) >= oldest);
-  });
+  }).catch(() => {});
+  
   return true;
 }
 
@@ -619,24 +621,42 @@ async function handleAuthAndAccount(request, response, pathname) {
     try {
       authUser = await accountAuth.createUser({ email, password, displayName });
     } catch (error) {
+      await store.persist();
       if (/already|registered|exists/i.test(String(error.message)) || /exists/i.test(String(error.code))) {
         return sendJson(response, 409, { error: "email_exists", message: "Email tersebut sudah terdaftar." });
       }
       throw error;
     }
     const user = createUserProfile({ id: authUser.id, email, displayName, createdAt: now });
+    let sessionObj;
     try {
       await store.mutate((data) => {
         if (Object.values(data.users).some((existing) => existing.email === email)) throw new Error("Email tersebut sudah terdaftar.");
         data.users[user.id] = user;
         data.signupSignals.push({ id: randomUUID(), userId: user.id, ...signal, createdAt: now });
+        
+        const token = randomBytes(32).toString("base64");
+        const tokenHash = sha256(token);
+        const csrfToken = randomBytes(32).toString("base64");
+        sessionObj = {
+          userId: user.id,
+          csrfToken,
+          createdAt: new Date().toISOString(),
+          expiresAt: new Date(Date.now() + (Boolean(input.remember) ? 30 : 1) * 24 * 60 * 60 * 1000).toISOString(),
+          token
+        };
+        data.sessions[tokenHash] = {
+          userId: sessionObj.userId,
+          csrfToken: sessionObj.csrfToken,
+          createdAt: sessionObj.createdAt,
+          expiresAt: sessionObj.expiresAt
+        };
       });
     } catch (error) {
       await accountAuth.deleteUser(user.id).catch(() => {});
       throw error;
     }
-    const session = await createSession(user.id, Boolean(input.remember));
-    return sendJson(response, 201, { ok: true, authenticated: true, csrfToken: session.csrfToken, user: getPublicUser(user), preferences: user.preferences }, { "Set-Cookie": getSessionCookie(session) });
+    return sendJson(response, 201, { ok: true, authenticated: true, csrfToken: sessionObj.csrfToken, user: getPublicUser(user), preferences: user.preferences || defaultPreferences() }, { "Set-Cookie": getSessionCookie(sessionObj) });
   }
 
   if (request.method === "POST" && pathname === "/api/auth/login") {
@@ -651,6 +671,7 @@ async function handleAuthAndAccount(request, response, pathname) {
     try {
       authUser = await accountAuth.signIn(email, String(input.password || ""));
     } catch {
+      await store.persist();
       return sendJson(response, 401, { error: "invalid_credentials", message: "Email atau kata sandi tidak cocok." });
     }
     let user;
