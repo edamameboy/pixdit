@@ -1,0 +1,23 @@
+{
+  "name": "layera",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Layera image campaign generator with a Node.js backend and Replicate FLUX 2 Pro.",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node --check server.js && node --check lib/supabase.js && node --check lib/replicate.js && node --check lib/creative-agents.js && node --check scripts/configure-supabase.mjs && node --check scripts/migrate-to-supabase.mjs && node --check app.js",
+    "configure:supabase": "node scripts/configure-supabase.mjs",
+    "migrate:supabase": "node scripts/migrate-to-supabase.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.116.0",
+    "replicate": "^1.4.0",
+    "sharp": "^0.35.4"
+  }
+}

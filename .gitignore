@@ -1,6 +1,20 @@
 # Generated campaign images are runtime output.
 generated/
 data/
+node_modules/
+.node-runtime/
+npm-debug.log*
+*.log
+
+# Local deployment helpers and provider-specific configuration.
+start-node.cmd
+Caddyfile.example
+Dockerfile
+.dockerignore
+.vercel/
+
+# Private planning notes are not application source.
+Yg harus ditambahin kedepannya.txt
 
 # Local visual test artifacts.
 preview-*.png

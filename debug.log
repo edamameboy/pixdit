@@ -1,4 +1,0 @@
-[0827/234407.602:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Access is denied. (0x5)
-[0827/234414.847:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Access is denied. (0x5)
-[0827/234424.376:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Access is denied. (0x5)
-[0827/234901.852:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Access is denied. (0x5)

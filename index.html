@@ -8,16 +8,15 @@
       name="description"
       content="Layera membantu bisnis lokal membuat materi promosi yang siap dipakai dengan bantuan AI."
     />
-    <title>Layera — Studio kreatif untuk bisnismu</title>
+    <title>Layera - Studio kreatif untuk bisnismu</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="noise" aria-hidden="true"></div>
-    <button id="language-switch" class="language-switch" type="button" aria-label="Switch to English">EN</button>
 
     <main id="auth-screen" class="auth-screen">
       <section class="auth-visual">
-        <a class="brand brand-light" href="#" aria-label="Layera">
+        <a class="brand brand-light" href="#login" data-auth-home aria-label="Kembali ke halaman masuk Layera">
           <span class="brand-mark"><i></i><i></i></span>
           <span>Layera</span>
         </a>
@@ -51,10 +50,10 @@
 
       <section class="auth-panel">
         <div class="auth-form-wrap">
-          <div class="mobile-brand brand">
+          <a class="mobile-brand brand" href="#login" data-auth-home aria-label="Kembali ke halaman masuk Layera">
             <span class="brand-mark"><i></i><i></i></span>
             <span>Layera</span>
-          </div>
+          </a>
           <div id="login-heading" class="form-heading">
             <span class="mini-label">SELAMAT DATANG</span>
             <h2>Masuk ke ruang kreatifmu.</h2>
@@ -106,10 +105,6 @@
             <div class="input-wrap"><input id="register-password" type="password" minlength="8" maxlength="128" placeholder="Minimal 8 karakter" autocomplete="new-password" required /></div>
             <label for="register-confirm">Ulangi kata sandi</label>
             <div class="input-wrap"><input id="register-confirm" type="password" minlength="8" maxlength="128" placeholder="Ketik ulang kata sandi" autocomplete="new-password" required /></div>
-            <div class="captcha-label-row"><label for="register-captcha">Verifikasi keamanan</label><button id="refresh-captcha" class="text-button subtle" type="button">Soal baru</button></div>
-            <div id="math-captcha" class="captcha-control"><strong id="captcha-question">Memuat soal...</strong><input id="register-captcha" type="number" inputmode="numeric" autocomplete="off" aria-label="Jawaban verifikasi keamanan" required /></div>
-            <div id="turnstile-widget" class="turnstile-widget is-hidden" aria-label="Verifikasi keamanan Cloudflare Turnstile"></div>
-            <p class="signup-safety-note">CAPTCHA, pembatasan jaringan, dan deteksi perangkat membantu menjaga kredit gratis tetap adil.</p>
             <label class="check-row"><input id="register-remember" type="checkbox" checked /><span class="custom-check">✓</span> Ingat saya</label>
             <button class="primary-button auth-submit" type="submit">Buat akun <span>→</span></button>
           </form>
@@ -136,7 +131,7 @@
           </button>
           <button id="library-nav" class="nav-item" data-route="library" type="button">
             <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg>
-            Library
+            Koleksi
             <span id="library-nav-count" class="nav-count">0</span>
           </button>
           <button class="nav-item" data-route="inspiration" type="button">
@@ -265,7 +260,7 @@
           <header class="library-header">
             <div>
               <span class="eyebrow"><b></b> KOLEKSI PRIBADI</span>
-              <h1>Library desainmu.</h1>
+              <h1>Koleksi Desainmu.</h1>
               <p>Simpan hasil terbaik, lalu buat versi baru tanpa mengubah gambar generasi awal.</p>
             </div>
             <div class="library-lock-note"><span>◆</span><div><strong>Original Selalu Aman</strong><small>Editing akan membuat versi baru di Library.</small></div></div>
@@ -320,17 +315,24 @@
                 <div class="copy-section-head"><span>Teks Poster</span><small>Ditambahkan setelah gambar dibuat</small></div>
                 <label for="brand-input">Nama Brand:</label>
                 <input id="brand-input" type="text" maxlength="60" value="Rumah Seduh" placeholder="Contoh: Rumah Seduh" />
-                <label for="headline-input">Headline:</label>
+                <div class="headline-control-head">
+                  <label for="headline-input">Headline:</label>
+                  <div id="headline-mode-toggle" class="headline-mode-toggle" role="group" aria-label="Cara membuat headline">
+                    <button class="active" type="button" data-headline-mode="manual">Tulis manual</button>
+                    <button type="button" data-headline-mode="ai">Buatkan AI</button>
+                  </div>
+                </div>
                 <textarea id="headline-input" maxlength="100" rows="2" placeholder="Contoh: Rasa pulang di setiap tegukan">Rasa pulang di setiap tegukan.</textarea>
+                <button id="generate-headline" class="headline-ai-button is-hidden" type="button"><span>✦</span><strong>Buat headline dari brief</strong></button>
                 <label for="cta-input">Call to Action:</label>
                 <input id="cta-input" type="text" maxlength="50" value="Nikmati sekarang" placeholder="Contoh: Pesan sekarang" />
                 <label for="brand-logo-input">Logo Brand <span class="optional-label">Opsional</span></label>
                 <div class="logo-upload-row">
                   <input id="brand-logo-input" class="visually-hidden" type="file" accept="image/png,image/jpeg,.jpg,.jpeg" />
-                  <label class="logo-upload-button" for="brand-logo-input"><span>↑</span><strong>Upload logo</strong><small>PNG, JPG, atau JPEG</small></label>
+                  <label class="logo-upload-button" for="brand-logo-input"><span>↑</span><strong>Upload logo</strong><small>PNG/JPG · latar dihapus otomatis</small></label>
                   <div id="brand-logo-preview" class="brand-logo-preview is-hidden"><img alt="Preview logo brand" /><button id="remove-brand-logo" type="button" aria-label="Hapus logo">×</button></div>
                 </div>
-                <p>AI membuat key visual tanpa tulisan. Kosongkan kolom yang tidak ingin ditampilkan. Setelah upload, posisi logo dapat kamu atur langsung dengan drag pada hasil gambar.</p>
+                <p>AI membuat key visual tanpa tulisan. Kosongkan kolom yang tidak ingin ditampilkan. Logo diperkecil dan latarnya dihapus otomatis; posisinya dapat kamu atur langsung dengan drag pada hasil gambar.</p>
               </div>
 
               <div class="agent-section">
@@ -386,7 +388,7 @@
 
           <div id="selection-bar" class="selection-bar is-hidden">
             <div class="selected-thumb poster poster-1"><div class="poster-copy"></div></div>
-            <div class="selection-copy"><span>PILIHANMU</span><strong id="selected-name">Konsep 01 · Editorial Warm</strong></div>
+            <div class="selection-copy"><span>PILIHANMU</span><strong id="selected-name">Konsep 01 · Human Narrative</strong></div>
             <button id="save-library-button" class="secondary-button" type="button">◇ Simpan ke Library</button>
             <button id="use-design-button" class="dark-button" type="button">Gunakan desain <span>→</span></button>
             <button id="clear-selection" class="icon-button" type="button" aria-label="Batalkan pilihan">×</button>
@@ -406,10 +408,15 @@
           <input id="project-name" type="text" placeholder="Contoh: Promo Menu Lebaran" required />
           <label for="project-category">Kategori bisnis</label>
           <div class="category-grid">
-            <button class="category-option selected" type="button" data-category="Makanan & Minuman"><span>☕</span>Makanan & Minuman</button>
+            <button class="category-option" type="button" data-category="Makanan & Minuman"><span>☕</span>Makanan & Minuman</button>
             <button class="category-option" type="button" data-category="Fashion"><span>◒</span>Fashion</button>
             <button class="category-option" type="button" data-category="Kecantikan"><span>✿</span>Kecantikan</button>
-            <button class="category-option" type="button" data-category="Lainnya"><span>＋</span>Lainnya</button>
+            <button class="category-option" type="button" data-category="Jasa"><span>◇</span>Jasa</button>
+            <button class="category-option" type="button" data-category="Teknologi"><span>⌘</span>Teknologi</button>
+            <button class="category-option" type="button" data-category="Pendidikan"><span>◎</span>Pendidikan</button>
+            <button class="category-option" type="button" data-category="Kesehatan"><span>✚</span>Kesehatan</button>
+            <button class="category-option" type="button" data-category="Properti"><span>⌂</span>Properti</button>
+            <button class="category-option selected" type="button" data-category="Lainnya"><span>＋</span>Lainnya</button>
           </div>
           <div class="modal-actions"><button class="secondary-button" data-close-modal type="button">Batal</button><button class="primary-button" type="submit">Buat proyek <span>→</span></button></div>
         </form>
@@ -485,8 +492,10 @@
             <label for="account-name">Nama:</label>
             <input id="account-name" type="text" minlength="2" maxlength="80" autocomplete="name" required />
             <label for="account-email">Alamat Email:</label>
-            <input id="account-email" type="email" readonly />
-            <p class="field-note">Email menjadi identitas login dan belum dapat diubah pada versi lokal ini.</p>
+            <input id="account-email" type="email" autocomplete="email" required />
+            <label for="account-current-password">Kata Sandi Saat Ini:</label>
+            <input id="account-current-password" type="password" autocomplete="current-password" />
+            <p class="field-note">Kata sandi saat ini hanya diperlukan jika kamu mengganti email login.</p>
             <div class="modal-actions"><button class="primary-button" type="submit">Simpan Profil</button></div>
           </form>
         </section>
@@ -515,6 +524,31 @@
           </form>
         </section>
 
+      </div>
+    </div>
+
+    <div id="library-preview-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="library-preview-title" aria-hidden="true">
+      <div class="library-preview-modal">
+        <header class="library-preview-head">
+          <div><span class="modal-kicker">PREVIEW KOLEKSI</span><h2 id="library-preview-title">Preview desain.</h2><p id="library-preview-version">Original</p></div>
+          <button id="library-preview-close" class="icon-button" type="button" aria-label="Tutup preview">×</button>
+        </header>
+        <div class="library-preview-body">
+          <section class="library-preview-stage" aria-label="Preview gambar penuh">
+            <div id="library-preview-poster-shell"><div id="library-preview-poster" class="poster poster-1"></div></div>
+          </section>
+          <aside class="grading-panel">
+            <div class="zoom-control-head"><strong>Zoom</strong><output id="library-zoom-value">100%</output></div>
+            <div class="zoom-controls"><button id="library-zoom-out" type="button" aria-label="Perkecil">−</button><input id="library-zoom" type="range" min="50" max="250" step="10" value="100" /><button id="library-zoom-in" type="button" aria-label="Perbesar">+</button></div>
+            <div class="grading-title"><strong>Color grading</strong><small>Tersimpan untuk setiap versi</small></div>
+            <label for="grade-brightness"><span>Brightness</span><output data-grade-value="brightness">100</output></label><input id="grade-brightness" data-grade="brightness" type="range" min="50" max="150" value="100" />
+            <label for="grade-contrast"><span>Contrast</span><output data-grade-value="contrast">100</output></label><input id="grade-contrast" data-grade="contrast" type="range" min="50" max="150" value="100" />
+            <label for="grade-saturation"><span>Saturation</span><output data-grade-value="saturation">100</output></label><input id="grade-saturation" data-grade="saturation" type="range" min="0" max="200" value="100" />
+            <label for="grade-warmth"><span>Warmth</span><output data-grade-value="warmth">0</output></label><input id="grade-warmth" data-grade="warmth" type="range" min="-100" max="100" value="0" />
+            <button id="reset-color-grade" class="secondary-button" type="button">Reset warna</button>
+            <button id="library-preview-download" class="dark-button" type="button">Unduh PNG</button>
+          </aside>
+        </div>
       </div>
     </div>
 

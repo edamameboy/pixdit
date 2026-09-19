@@ -1,70 +1,65 @@
-# Layera Public Deployment
+# Layera Public Deployment (Node.js)
 
-Mode publik dibuat untuk private beta lewat HTTPS proxy. Backend PowerShell tetap berjalan di `127.0.0.1`, lalu Caddy atau Cloudflare Tunnel yang menerima traffic internet.
+Layera dijalankan oleh `server.js` dan menggunakan Replicate Flux 2 Pro sebagai satu-satunya provider gambar.
 
-Jangan forward port backend `8000` atau `8001` langsung ke internet.
-
-## Rekomendasi Topologi
+## Arsitektur
 
 ```text
-Internet -> HTTPS Caddy/Cloudflare Tunnel -> 127.0.0.1:8001 -> server.ps1 -> ComfyUI 127.0.0.1:8188
+Browser -> HTTPS hosting/reverse proxy -> Node.js server.js -> Replicate Flux 2 Pro
+                                      -> Supabase Auth + Postgres
+                                      -> persistent generated images
 ```
 
-Untuk Spectrum, port forward yang disarankan adalah TCP `80` dan `443` ke komputer Windows yang menjalankan Caddy. Port `8000`/`8001` tetap private.
-
-## Yang Dibutuhkan
-
-- Domain atau subdomain, misalnya `app.domainanda.com`.
-- DNS `A` record mengarah ke public IP Spectrum Anda.
-- Cloudflare Turnstile site key dan secret key untuk domain tersebut.
-- Caddy terpasang di Windows, atau Cloudflare Tunnel bila tidak ingin membuka port router.
-- ComfyUI tetap berjalan di komputer yang sama bila memakai Qwen lokal.
-- Password akun demo Maya sudah diganti sebelum public mode dinyalakan.
-
-Catatan: IP Spectrum bisa berubah. Untuk penggunaan serius, pakai dynamic DNS atau tunnel. Cek juga kebijakan internet provider Anda sebelum menjalankan layanan publik dari koneksi rumah.
-
-## Menjalankan Backend Publik
-
-Buka PowerShell di folder proyek:
-
-```powershell
-$env:TURNSTILE_SITE_KEY="SITE_KEY_DARI_CLOUDFLARE"
-$env:TURNSTILE_SECRET_KEY="SECRET_KEY_DARI_CLOUDFLARE"
-$env:IMAGE_PROVIDER="comfyui"
-$env:COMFYUI_URL="http://127.0.0.1:8188"
-powershell -ExecutionPolicy Bypass -File .\start-public.ps1 -PublicOrigin "https://app.domainanda.com"
-```
-
-Backend akan listen di `127.0.0.1:8001`. Itu sengaja, supaya backend tidak bisa ditembak langsung dari internet.
-
-## Menjalankan Caddy
-
-Set environment variable untuk host publik:
-
-```powershell
-$env:LAYERA_PUBLIC_HOST="app.domainanda.com"
-$env:ACME_EMAIL="email-anda@example.com"
-caddy run --config .\Caddyfile.example
-```
-
-Setelah Caddy berhasil mendapat sertifikat HTTPS, buka:
+## Environment wajib
 
 ```text
-https://app.domainanda.com
+NODE_ENV=production
+HOST=0.0.0.0
+PORT=8000
+PUBLIC_ORIGIN=https://app.domainanda.com
+TRUST_PROXY=true
+REPLICATE_API_TOKEN=isi_di_environment_vercel
+REPLICATE_MODEL=black-forest-labs/flux-2-pro
+SUPABASE_URL=https://project-ref-anda.supabase.co
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_key_anda
+SUPABASE_SECRET_KEY=isi_secret_server_di_environment_vercel
+GENERATED_DIR=/data/generated
 ```
 
-## Checklist Sebelum Dibagikan
+Masukkan token melalui menu secret/environment milik hosting provider. Jangan commit file `.env`.
 
-- Router forward TCP `80` dan `443` ke PC, bukan `8000` atau `8001`.
-- Windows Firewall mengizinkan Caddy pada port `80` dan `443`.
-- `http://localhost:8001/api/health` hanya bisa dibuka dari komputer server.
-- `https://app.domainanda.com/api/health` bisa dibuka dari internet.
-- Signup menampilkan Cloudflare Turnstile, bukan CAPTCHA matematika lokal.
-- Akun demo `maya@rumahseduh.id` tidak lagi memakai password `kanvasdemo`.
-- Database `data\kanvas.mdb` sudah dibackup berkala.
+## Build dan start
 
-## Batasan Yang Masih Perlu Diingat
+Tanpa Docker:
 
-Versi ini sudah menambah secure cookie, CSRF token, public origin check, security headers, Turnstile signup, rate limit login/signup, dan proteksi gambar runtime per akun saat public mode aktif.
+```text
+npm ci
+npm start
+```
 
-Untuk benar-benar production komersial, backend PowerShell dan Microsoft Access masih perlu diganti ke backend/web server production, PostgreSQL atau managed database, email verification/reset password, object storage private, job queue, backup otomatis, monitoring, dan payment subscription.
+Dengan Docker:
+
+```text
+docker build -t layera .
+docker run --env-file .env.production -p 8000:8000 -v layera-data:/data layera
+```
+
+Pastikan platform menyediakan persistent disk yang dipasang pada `/data`. Replicate menghapus output API setelah waktu terbatas, sehingga Node langsung menyimpan salinannya ke `GENERATED_DIR`.
+
+## Checklist sebelum publik
+
+- Domain publik memakai HTTPS.
+- `PUBLIC_ORIGIN` sama persis dengan domain publik, tanpa trailing slash.
+- `TRUST_PROXY=true` hanya jika reverse proxy platform mengatur forwarded headers dengan benar.
+- `REPLICATE_API_TOKEN` hanya tersimpan sebagai secret server.
+- `SUPABASE_SECRET_KEY` hanya tersimpan sebagai secret server dan tidak dikirim ke browser.
+- `GENERATED_DIR` berada di persistent disk.
+- `GET /api/health` menampilkan `provider: replicate`, model Flux 2 Pro, `database: supabase`, `auth: supabase`, dan `configured: true`.
+- Backup Supabase dan hasil gambar dijalankan secara berkala.
+- CAPTCHA atau verifikasi email dipasang kembali sebelum peluncuran komersial.
+
+## Batasan private beta
+
+State Layera sudah berada di Supabase Postgres, tetapi adapter saat ini meng-cache satu dokumen JSONB dan ditujukan untuk satu instance Node. Sebelum horizontal scaling, normalisasi state atau tambahkan locking/transaksi, pindahkan file ke private object storage, rate limit ke shared store, dan generation ke background job queue.
+
+Panduan lengkap environment, testing, dan catatan migrasi tersedia di [NODE-DEPLOYMENT.md](NODE-DEPLOYMENT.md).
