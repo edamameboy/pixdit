@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 import { creativeAgents, getBehavioralPrompt } from "./lib/creative-agents.js";
 import { MemoryAuth, MemoryStore, SupabaseAuth, SupabaseStore } from "./lib/supabase.js";
-import { ReplicateImageProvider, saveGeneratedImage } from "./lib/replicate.js";
+import { ReplicateImageProvider } from "./lib/replicate.js";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -536,7 +536,11 @@ async function handleGeneration(request, response, input, auth) {
         sendNdjson(response, { type: "progress", index, agent: creativeAgent.agent, name: creativeAgent.name });
         const prompt = newImagePrompt({ brief, category, creativeAgent, format, style, primaryColor });
         const result = await imageProvider.run({ prompt, format, quality, signal: abortController.signal });
-        const url = await saveGeneratedImage({ generatedRoot, jobId, index, result });
+        const safeJobId = String(jobId).replace(/[^a-zA-Z0-9-]/g, "");
+        const fileName = `concept-${String(index + 1).padStart(2, "0")}.${result.extension}`;
+        const imageId = `${safeJobId}/${fileName}`;
+        const url = `/generated/${imageId}`;
+        await store.saveImage(imageId, auth.user.id, result.buffer, result.mimeType);
         await recordGeneratedFile(auth.user.id, url);
         await addUsageEvent(auth.user.id, "generate", perImageCreditCost);
         if (!brandRecorded) { await addAccountBrand(auth.user.id, brandName); brandRecorded = true; }
@@ -580,7 +584,11 @@ async function handleRefinement(request, response, input, auth) {
     const prompt = newImagePrompt({ brief, category, creativeAgent, format, style, primaryColor, refinement });
     const result = await imageProvider.run({ prompt, format, quality, sourcePath });
     const jobId = `refine-${randomUUID().replace(/-/g, "")}`;
-    const url = await saveGeneratedImage({ generatedRoot, jobId, index, result });
+    const safeJobId = String(jobId).replace(/[^a-zA-Z0-9-]/g, "");
+    const fileName = `concept-${String(index + 1).padStart(2, "0")}.${result.extension}`;
+    const imageId = `${safeJobId}/${fileName}`;
+    const url = `/generated/${imageId}`;
+    await store.saveImage(imageId, auth.user.id, result.buffer, result.mimeType);
     await recordGeneratedFile(auth.user.id, url);
     await addUsageEvent(auth.user.id, "refine", 3);
     return sendJson(response, 200, { ok: true, index, url, displayUrl: url, usage: getUsageStatus(auth.user.id) });
@@ -849,12 +857,20 @@ async function sendFile(request, response, pathname) {
   } else if (pathname.startsWith("/generated/")) {
     const auth = await getAuthenticatedUser(request);
     if (!auth) return sendUnauthorized(response);
-    if (store.data.generatedFiles[pathname]?.userId !== auth.user.id) return sendJson(response, 404, { error: "not_found" });
-    const relative = decodeURIComponent(pathname.slice("/generated/".length));
-    filePath = path.resolve(generatedRoot, relative);
-    if (!filePath.startsWith(`${generatedRoot}${path.sep}`)) return sendJson(response, 403, { error: "forbidden" });
-    contentType = assetMimeTypes.get(path.extname(filePath).toLowerCase());
-    cacheControl = "private, max-age=31536000, immutable";
+    
+    const imageId = decodeURIComponent(pathname.slice("/generated/".length));
+    const image = await store.getImage(imageId);
+    
+    if (!image || image.userId !== auth.user.id) return sendJson(response, 404, { error: "not_found" });
+    
+    response.writeHead(200, { 
+      ...securityHeaders, 
+      "Cache-Control": "private, max-age=31536000, immutable", 
+      "Content-Type": image.mimeType, 
+      "Content-Length": image.buffer.length 
+    });
+    if (request.method === "HEAD") return response.end();
+    return response.end(image.buffer);
   } else {
     return sendJson(response, 404, { error: "not_found" });
   }
