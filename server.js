@@ -36,7 +36,7 @@ const publicOrigin = String(process.env.PUBLIC_ORIGIN || "").replace(/\/+$/, "")
 const trustProxy = /^(?:1|true|yes)$/i.test(process.env.TRUST_PROXY || "");
 const cookieSecure = publicOrigin.startsWith("https://") || /^(?:1|true|yes)$/i.test(process.env.COOKIE_SECURE || "");
 const sessionCookieName = cookieSecure ? "__Host-layera_session" : "layera_session";
-const generatedRoot = path.resolve(projectRoot, process.env.GENERATED_DIR || "generated");
+const generatedRoot = path.resolve(projectRoot, process.env.GENERATED_DIR || (process.env.VERCEL ? "/tmp/layera-generated" : "generated"));
 const maxBodyBytes = 2 * 1024 * 1024;
 const supabaseUrl = String(process.env.SUPABASE_URL || "").replace(/\/+$/, "");
 const supabasePublishableKey = String(process.env.SUPABASE_PUBLISHABLE_KEY || "");
@@ -857,7 +857,7 @@ async function sendFile(request, response, pathname) {
   stream.pipe(response);
 }
 
-const server = http.createServer(async (request, response) => {
+const requestHandler = async (request, response) => {
   try {
     const pathname = new URL(request.url || "/", "http://layera.local").pathname;
     if (!isRequestOriginAllowed(request)) return sendJson(response, 403, { error: "request_origin_rejected", message: "Origin request tidak diizinkan." });
@@ -870,24 +870,29 @@ const server = http.createServer(async (request, response) => {
     if (!response.headersSent) sendJson(response, statusCode, { error: statusCode === 500 ? "server_error" : "request_error", message: statusCode === 500 && isProduction ? "Server belum dapat memproses permintaan." : error.message });
     else if (!response.writableEnded) response.end();
   }
-});
+};
 
-server.requestTimeout = 7 * 60 * 1000;
-server.headersTimeout = 20_000;
-server.keepAliveTimeout = 5_000;
-server.maxHeadersCount = 100;
-server.on("clientError", (_error, socket) => {
-  if (socket.writable) socket.end("HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\n");
-});
+export { requestHandler };
 
-server.listen(port, host, () => {
-  console.log(`Layera Node.js berjalan di http://localhost:${port}`);
-  console.log(`Provider gambar: Replicate ${imageProvider.model}`);
-  console.log(imageProvider.configured ? "REPLICATE_API_TOKEN terdeteksi." : "REPLICATE_API_TOKEN belum diatur; UI tetap dapat dibuka.");
-  console.log(`Penyimpanan akun: ${useMemoryBackend ? "memory test" : "Supabase"}`);
-  if (isProduction) console.log(`Mode production aktif untuk ${publicOrigin}.`);
-});
+if (!process.env.VERCEL) {
+  const server = http.createServer(requestHandler);
+  server.requestTimeout = 7 * 60 * 1000;
+  server.headersTimeout = 20_000;
+  server.keepAliveTimeout = 5_000;
+  server.maxHeadersCount = 100;
+  server.on("clientError", (_error, socket) => {
+    if (socket.writable) socket.end("HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\n");
+  });
 
-for (const signal of ["SIGINT", "SIGTERM"]) {
-  process.on(signal, () => server.close(() => process.exit(0)));
+  server.listen(port, host, () => {
+    console.log(`Layera Node.js berjalan di http://localhost:${port}`);
+    console.log(`Provider gambar: Replicate ${imageProvider.model}`);
+    console.log(imageProvider.configured ? "REPLICATE_API_TOKEN terdeteksi." : "REPLICATE_API_TOKEN belum diatur; UI tetap dapat dibuka.");
+    console.log(`Penyimpanan akun: ${useMemoryBackend ? "memory test" : "Supabase"}`);
+    if (isProduction) console.log(`Mode production aktif untuk ${publicOrigin}.`);
+  });
+
+  for (const signal of ["SIGINT", "SIGTERM"]) {
+    process.on(signal, () => server.close(() => process.exit(0)));
+  }
 }

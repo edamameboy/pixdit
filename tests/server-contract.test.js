@@ -32,6 +32,7 @@ test("Node backend supports auth, state, account, prompt, and provider contracts
       HOST: "127.0.0.1",
       PORT: String(port),
       NODE_ENV: "test",
+      PUBLIC_ORIGIN: "",
       REPLICATE_API_TOKEN: "",
       GENERATED_DIR: path.join(temporaryRoot, "generated"),
     },
