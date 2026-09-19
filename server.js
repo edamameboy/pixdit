@@ -816,8 +816,8 @@ async function handleApi(request, response, pathname) {
 const staticFiles = new Map([
   ["/", { file: "index.html", type: "text/html; charset=utf-8" }],
   ["/index.html", { file: "index.html", type: "text/html; charset=utf-8" }],
-  ["/app.js", { file: "app.js", type: "application/javascript; charset=utf-8" }],
-  ["/styles.css", { file: "styles.css", type: "text/css; charset=utf-8" }],
+  ["/app.js", { file: "public/app.js", type: "application/javascript; charset=utf-8" }],
+  ["/styles.css", { file: "public/styles.css", type: "text/css; charset=utf-8" }],
 ]);
 const assetMimeTypes = new Map([[".png", "image/png"], [".jpg", "image/jpeg"], [".jpeg", "image/jpeg"], [".webp", "image/webp"], [".svg", "image/svg+xml"], [".ico", "image/x-icon"]]);
 

@@ -2725,4 +2725,4 @@ async function bootstrap() {
   document.documentElement.dataset.appReady = "true";
 }
 
-bootstrap();
+if (typeof document !== "undefined") bootstrap();

@@ -8,6 +8,8 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.js" },
     { "src": "/favicon.ico", "dest": "/favicon.svg" },
+    { "src": "/app.js", "dest": "/public/app.js" },
+    { "src": "/styles.css", "dest": "/public/styles.css" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
