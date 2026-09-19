@@ -777,7 +777,9 @@ async function handleApi(request, response, pathname) {
     return sendJson(response, 200, {
       ok: true,
       configured: imageProvider.configured,
-      provider: "replicate",
+      provider: imageProvider.name,
+      trustProxy,
+      vercelEnv: process.env.VERCEL,
       model: imageProvider.model,
       endpoint: imageProvider.endpoint,
       deploymentMode: "node",
