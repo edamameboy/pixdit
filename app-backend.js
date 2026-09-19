@@ -58,9 +58,13 @@ const imageProvider = new ReplicateImageProvider();
 const activeUserJobs = new Set();
 
 if (isProduction && !publicOrigin) {
-  throw new Error("PUBLIC_ORIGIN wajib diatur saat NODE_ENV=production, contoh https://app.example.com.");
+  console.warn("PERINGATAN: PUBLIC_ORIGIN wajib diatur saat NODE_ENV=production, contoh https://app.example.com. CORS mungkin tidak berfungsi.");
 }
-await fsp.mkdir(generatedRoot, { recursive: true });
+try {
+  await fsp.mkdir(generatedRoot, { recursive: true });
+} catch (err) {
+  // Ignored in serverless environment
+}
 
 const securityHeaders = {
   "Content-Security-Policy": "default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; frame-src 'none'; font-src 'self'; manifest-src 'self'",
