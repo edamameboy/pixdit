@@ -258,11 +258,9 @@ async function allowSecurityEvent(key, eventType, limit, windowMinutes) {
   const count = store.data.securityEvents.filter((event) => event.key === key && event.eventType === eventType && Date.parse(event.createdAt) >= cutoff).length;
   if (count >= limit) return false;
   
-  store.mutate((data) => {
-    data.securityEvents.push({ id: randomUUID(), key, eventType, createdAt: new Date().toISOString() });
-    const oldest = Date.now() - 7 * 24 * 60 * 60 * 1000;
-    data.securityEvents = data.securityEvents.filter((event) => Date.parse(event.createdAt) >= oldest);
-  }).catch(() => {});
+  store.data.securityEvents.push({ id: randomUUID(), key, eventType, createdAt: new Date().toISOString() });
+  const oldest = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  store.data.securityEvents = store.data.securityEvents.filter((event) => Date.parse(event.createdAt) >= oldest);
   
   return true;
 }
