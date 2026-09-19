@@ -5,12 +5,11 @@
       "maxDuration": 300
     }
   },
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/index.js" },
-    { "src": "/favicon.ico", "dest": "/favicon.svg" },
-    { "src": "/app.js", "dest": "/public/app.js" },
-    { "src": "/styles.css", "dest": "/public/styles.css" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/favicon.ico", "destination": "/favicon.svg" },
+    { "source": "/app.js", "destination": "/public/app.js" },
+    { "source": "/styles.css", "destination": "/public/styles.css" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
